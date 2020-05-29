@@ -1,5 +1,5 @@
-#include"trie.h"
 #include<stdio.h>
+#include "trie.h"
 
 int main()
 {
@@ -14,5 +14,9 @@ int main()
 	{
 		printf("%d",search(root, keys[i]));
 	}
+	char user_input[50];
+	scanf("%s", user_input);
+	autosuggestion(root, user_input);
+	list_valid_words(root);
 	return 0;
 }

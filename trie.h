@@ -1,7 +1,5 @@
 #ifndef TRIE
 #define CHAR_COUNT 26
-#define TRUE 1
-#define FALSE 0
 typedef struct trie_node
 {
 	struct trie_node *children[CHAR_COUNT];
@@ -11,4 +9,6 @@ typedef struct trie_node
 Node* get_node();
 void insert(Node*, char[]);
 short search(Node*, char[]);
+void autosuggestion(Node*, char[]);
+void list_valid_words(Node*);
 #endif
