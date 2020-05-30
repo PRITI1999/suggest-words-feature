@@ -1,22 +1,20 @@
 #include<stdio.h>
+#include<string.h>
 #include "trie.h"
 
 int main()
 {
 	int i;
-	char keys[4][50] = {"hello","hell","yellow","elbow"};
 	Node* root = get_node();
-	for(i = 0; i < 4; i++)
-	{
-		insert(root, keys[i]);
-	}
-	for(i = 0; i < 4; i++)
-	{
-		printf("%d",search(root, keys[i]));
-	}
+	insert_from_file(root, "/home/pchattopadhyay/college-academics/C_Prog/autosuggestion/all-words.txt");
 	char user_input[50];
+	printf("Enter the prefix to get valid words or ! to exit\n");
 	scanf("%s", user_input);
-	autosuggestion(root, user_input);
-	list_valid_words(root);
+	while(strcmp(user_input, "!"))
+	{
+		autosuggestion(root, user_input);
+		scanf("%s", user_input);
+	}
+	printf("Have a nice day :):)\n");
 	return 0;
 }

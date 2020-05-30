@@ -11,4 +11,5 @@ void insert(Node*, char[]);
 short search(Node*, char[]);
 void autosuggestion(Node*, char[]);
 void list_valid_words(Node*);
+void insert_from_file(Node*, char*);
 #endif

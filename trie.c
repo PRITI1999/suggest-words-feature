@@ -2,11 +2,10 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
-//#define words 16
 #define TRUE 1
 #define FALSE 0
 
-char words[50][50];
+char words[300000][50];
 int row = 0;
 char stack[50];
 int top = 0;
@@ -114,6 +113,10 @@ Node* root_prefix(Node* root, char* prefix)
 
 void find_words(Node* root)
 {
+	if(row > 4)
+	{
+		return;
+	}
 	if(root)
 	{
 		stack[top++] = root->data;
@@ -122,7 +125,7 @@ void find_words(Node* root)
 			int i;
 			for(i = 0; i < top; i++)
 			{
-				words[row][i] = stack[i];	
+				words[row][i] = stack[i];
 			}
 			++row;
 		}
@@ -148,7 +151,6 @@ void autosuggestion(Node* root, char* prefix)
 	Node* child;
 	if(root)
 	{
-		int i;
 		root = root_prefix(root, prefix);
 		if(!root)
 		{
@@ -158,6 +160,7 @@ void autosuggestion(Node* root, char* prefix)
 		top--;
 		find_words(root);
 		print_words();
+		printf("%d\n", row);
 	}
 }
 
@@ -169,23 +172,32 @@ void list_valid_words(Node *root)
 	print_words();
 }
 
+void insert_from_file(Node* root, char* file_address)
+{
+	if(root)
+	{
+		FILE *fp = fopen(file_address, "r");
+		if(fp == NULL)
+		{
+			printf("Error! File missing");
+			return;
+		}
+		while(feof(fp) == 0)
+		{
+			char word[50];
+			fscanf(fp, "%[^' '|| ^\n]%*c", word);
+			insert(root, word);
+		}
+		fclose(fp);
+	}
+}
+
 /*int main()
 {
-	int i;
-	//char key[words][50] = {"light", "like"};
-	char key[words][50] = {"LIfe","like","likely","lifeline", "likeness", "live","lively","line","light","lite","likelihood","and","andhadhoon","an","a","andhakanoon"};
-	char not_key[2][50] ={"lige","kile"};
-	char user_input[50];
 	Node* root = get_node();
-	for(i = 0; i < words; i++)
-	{
-		insert(root, key[i]);
-	}
-	printf("%d", search(root, key[0]));
-	printf("%d", search(root, not_key[0]));
-	printf("%d", search(root, not_key[1]));
-	scanf("%s", user_input);
-	autosuggestion(root, user_input);
+	insert_from_file(root, "3000-words.txt");
+	//list_valid_words(root);
+	char user_input[50];
 	scanf("%s", user_input);
 	autosuggestion(root, user_input);
 	return 0;
