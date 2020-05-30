@@ -112,6 +112,7 @@ amazing
 American
 among
 amount
+an
 analysis
 analyst
 analyze
@@ -1451,7 +1452,7 @@ journalist
 journey
 joy
 judge
-judgment
+judgement
 juice
 jump
 junior

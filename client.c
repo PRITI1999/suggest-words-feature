@@ -1,20 +1,22 @@
 #include<stdio.h>
 #include<string.h>
-#include "trie.h"
+#include "suggest_feature.h"
 
-int main()
+int main(int argc, char* argv[])
 {
-	int i;
-	Node* root = get_node();
-	insert_from_file(root, "/home/pchattopadhyay/college-academics/C_Prog/autosuggestion/all-words.txt");
-	char user_input[50];
-	printf("Enter the prefix to get valid words or ! to exit\n");
-	scanf("%s", user_input);
-	while(strcmp(user_input, "!"))
+	if(argc > 1)
 	{
-		autosuggestion(root, user_input);
-		scanf("%s", user_input);
+		file_name = "common-words.txt";
+		Node* root = init_word_trie();
+		argv++;
+		for(; *argv; argv++)
+		{
+			autosuggestion(root, *argv);
+		}
 	}
-	printf("Have a nice day :):)\n");
+	else
+	{
+		printf("[ERROR]prefix argument missing!\n");
+	}
 	return 0;
 }
