@@ -1,2 +1,2 @@
-# autocomplete-words
-Implementation of autocomplete feature using trie in C
+# suggest-words-feature
+Implementation of autosuggest feature using trie in C
