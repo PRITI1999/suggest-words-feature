@@ -1,4 +1,5 @@
 #include"trie.h"
+#include"logger.h"
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
@@ -79,7 +80,8 @@ void insert_from_file(Node* root, char* file_address)
 		FILE *fp = fopen(file_address, "r");
 		if(fp == NULL)
 		{
-			printf("Error! File missing\n");
+			logger(ERROR_TAG, "Words file could not be opened!");
+			printf("Error! Could not find dictionary file\n");
 			exit(1);
 		}
 		while(feof(fp) == 0)

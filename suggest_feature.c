@@ -1,7 +1,9 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<ctype.h>
+#include<string.h>
 #include"suggest_feature.h"
+#include"logger.h"
 
 char words[300000][50];
 int row;
@@ -13,6 +15,7 @@ void print_words()
 	int i;
 	for(i = 0; i < row; i++)
 	{
+		logger(INFO_TAG, words[i]);
 		printf("%s\n", words[i]);
 	}
 }
@@ -76,10 +79,11 @@ void autosuggestion(Node* root, char* prefix)
 {
 	top = 0;
 	row = 0;
-	/*for(; *prefix; prefix++)
+	char* temp = prefix;
+	for(; *temp; temp++)
 	{
-		*prefix = tolower(*prefix);
-	}*/
+		*temp = tolower(*temp);
+	}
 	Node* child;
 	if(root)
 	{
@@ -91,12 +95,15 @@ void autosuggestion(Node* root, char* prefix)
 			root = root_prefix(root, prefix);
 			if(!root)
 			{
-				printf("No suggestions available!");
+				logger(INFO_TAG, "No suggestions available");
+				printf("No suggestions available!\n");
 				return;
 			}
 		}
 		top--;
 		find_words(root);
+		strcat(prefix, " is the input");
+		logger(INFO_TAG, prefix);
 		printf("The top words closest to %s in alphabetical order:\n", prefix);
 		print_words();
 	}
@@ -112,7 +119,8 @@ Node* init_word_trie()
 		insert_from_file(root, file_name);
 		return root;
 	}
-	return NULL;
+	logger(ERROR_TAG, "get_node() returned null, memory could not be allocated");
 	printf("Uh-oh! Could not initialize trie. Try Again.");
 	exit(1);
+	return NULL;
 }
