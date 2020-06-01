@@ -12,7 +12,7 @@ Node* get_node()
 	{
 		int i;
 		new_node->isEnd = FALSE;
-		new_node->data = '-';
+		//new_node->data = '-';
 		for(i = 0; i < CHAR_COUNT; i++)
 		{
 			new_node->children[i] = NULL;
@@ -41,7 +41,7 @@ void insert(Node* root, char* key)
 		{
 
 			(*child) = get_node();
-			(*child)->data = key[0];
+			//(*child)->data = key[0];
 
 		}
 		if(key[1] == '\0')

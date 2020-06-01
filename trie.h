@@ -5,7 +5,7 @@
 typedef struct trie_node
 {
 	struct trie_node *children[CHAR_COUNT];
-	char data;
+	//char data;
 	short isEnd;	
 } Node;
 Node* get_node();

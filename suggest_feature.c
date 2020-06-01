@@ -31,7 +31,8 @@ Node* root_prefix(Node* root, char* prefix)
 		{
 			return NULL;
 		}
-		stack[top++] = child->data;
+		//stack[top++] = child->data;
+		stack[top++] = prefix[i];
 		if(prefix[i+1] == '\0')
 		{
 			return child;
@@ -43,7 +44,7 @@ Node* root_prefix(Node* root, char* prefix)
 	return NULL;
 }
 
-void find_words(Node* root)
+void find_words(Node* root, char data)
 {
 	if(row > 4)
 	{
@@ -51,7 +52,7 @@ void find_words(Node* root)
 	}
 	if(root)
 	{
-		stack[top++] = root->data;
+		stack[top++] = data;
 		if(root->isEnd == TRUE)
 		{
 			int i;
@@ -69,7 +70,7 @@ void find_words(Node* root)
 			{
 				continue;
 			}
-			find_words(child);
+			find_words(child, i+97);
 		}
 		top--;
 	}
@@ -101,7 +102,7 @@ void autosuggestion(Node* root, char* prefix)
 			}
 		}
 		top--;
-		find_words(root);
+		find_words(root, stack[top]);
 		strcat(prefix, " is the input");
 		logger(INFO_TAG, prefix);
 		printf("The top words closest to %s in alphabetical order:\n", prefix);
@@ -124,3 +125,14 @@ Node* init_word_trie()
 	exit(1);
 	return NULL;
 }
+
+/*int main()
+{
+	init_log();
+	Node* root = get_node();
+	insert_from_file(root, "common-words.txt");
+	char input[50];
+	scanf("%s", input);
+	autosuggestion(root,input);
+
+}*/
