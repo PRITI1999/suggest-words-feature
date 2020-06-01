@@ -4,12 +4,14 @@
 #include<string.h>
 #include"suggest_feature.h"
 #include"logger.h"
+#define MAX_SUGGESTION 5
 
-char words[300000][50];
+char words[MAX_SUGGESTION][50];
 int row;
 char stack[50];
 int top;
 
+//Print the retrieved words as per prefix
 void print_words()
 {
 	int i;
@@ -20,6 +22,7 @@ void print_words()
 	}
 }
 
+//To ensure any word exist in the triw with the given prefix
 Node* root_prefix(Node* root, char* prefix)
 {
 	int i = 0;
@@ -31,10 +34,10 @@ Node* root_prefix(Node* root, char* prefix)
 		{
 			return NULL;
 		}
-		//stack[top++] = child->data;
 		stack[top++] = prefix[i];
 		if(prefix[i+1] == '\0')
 		{
+			//end of prefix indicates the prefix was found in the trie, returns the end of prefix node
 			return child;
 		}
 		root = child;
@@ -44,15 +47,19 @@ Node* root_prefix(Node* root, char* prefix)
 	return NULL;
 }
 
+//find words if any for the given prefix
 void find_words(Node* root, char data)
 {
-	if(row > 4)
+	//to limit the number of suggestions
+	if(row >= MAX_SUGGESTION )
 	{
 		return;
 	}
 	if(root)
 	{
+		//push the root data into the stack
 		stack[top++] = data;
+		//if a valid word is found the word in the stack is copied to the word list
 		if(root->isEnd == TRUE)
 		{
 			int i;
@@ -63,6 +70,7 @@ void find_words(Node* root, char data)
 			++row;
 		}
 		int i;
+		//Traverse the children of root to branch to the parts of trie that exists
 		for(i = 0; i < 26; i++)
 		{
 			Node* child = root->children[i];
@@ -72,15 +80,19 @@ void find_words(Node* root, char data)
 			}
 			find_words(child, i+97);
 		}
+		//pop the root data from the stack
 		top--;
 	}
 }
 
+//To do all the operations required to find suggestions
 void autosuggestion(Node* root, char* prefix)
 {
+	//initialize top and row with 0 to ensure previous value do not incur for a new prefix
 	top = 0;
 	row = 0;
 	char* temp = prefix;
+	//Convert the prefix string to lowercase for maintaining uniformity
 	for(; *temp; temp++)
 	{
 		*temp = tolower(*temp);
@@ -91,9 +103,13 @@ void autosuggestion(Node* root, char* prefix)
 		root = root_prefix(root, prefix);
 		if(!root)
 		{
+			/*if no words existed in common-words.txt, the search moves to the words in all-words.txt
+			 * this is to maintain a heirarchical structure of suggesting, the program tries to suggest
+			 * common-words before moving to any word present first alphabetically*/
 			file_name = "all-words.txt";
 			root = init_word_trie();
 			root = root_prefix(root, prefix);
+			//If no words are found in all-words.txt show user no words exists for the prefix
 			if(!root)
 			{
 				logger(INFO_TAG, "No suggestions available");
@@ -101,6 +117,7 @@ void autosuggestion(Node* root, char* prefix)
 				return;
 			}
 		}
+		//To avoid duplicate character in the stack
 		top--;
 		find_words(root, stack[top]);
 		strcat(prefix, " is the input");
@@ -110,14 +127,19 @@ void autosuggestion(Node* root, char* prefix)
 	}
 }
 
+//Create a trie and return root
 Node* init_word_trie()
 {
+	//initialize top and row with 0 to ensure no garbage or previous value incurs
 	top = 0;
 	row = 0;
+	//Initialize the root
 	Node* root = get_node();
+	//Form the trie of words present in the file
 	if(root)
 	{
 		insert_from_file(root, file_name);
+		//return the root of trie
 		return root;
 	}
 	logger(ERROR_TAG, "get_node() returned null, memory could not be allocated");
@@ -125,14 +147,3 @@ Node* init_word_trie()
 	exit(1);
 	return NULL;
 }
-
-/*int main()
-{
-	init_log();
-	Node* root = get_node();
-	insert_from_file(root, "common-words.txt");
-	char input[50];
-	scanf("%s", input);
-	autosuggestion(root,input);
-
-}*/
