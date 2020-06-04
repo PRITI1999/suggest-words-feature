@@ -120,8 +120,10 @@ void autosuggestion(Node* root, char* prefix)
 		//To avoid duplicate character in the stack
 		top--;
 		find_words(root, stack[top]);
-		strcat(prefix, " is the input");
-		logger(INFO_TAG, prefix);
+		char *log_info;
+		strcpy(log_info, prefix);
+		strcat(log_info, " is the input");
+		logger(INFO_TAG, log_info);
 		printf("The top words closest to %s in alphabetical order:\n", prefix);
 		print_words();
 	}
